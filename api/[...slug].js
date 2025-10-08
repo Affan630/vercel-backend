@@ -1,5 +1,5 @@
-const app = require("../../server");
 const serverless = require("serverless-http");
+const app = require("../server");
 
 module.exports = async (req, res) => {
   try {
@@ -10,3 +10,4 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 };
+
