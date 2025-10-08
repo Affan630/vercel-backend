@@ -1,33 +1,29 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const connectDB = require("./utils/db");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js";
+import workoutRoutes from "./routes/workouts.js";
+import authRoutes from "./routes/auth.js";
+import analyticsRoutes from "./routes/analytics.js";
 
-// Import routes
-const authRoutes = require("./routes/auth");
-const workoutRoutes = require("./routes/workouts");
-const analyticsRoutes = require("./routes/analytics");
-
+dotenv.config();
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
-// Connect DB (cached)
+// Connect MongoDB
 connectDB();
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/workouts", workoutRoutes);
-app.use("/api/analytics", analyticsRoutes);
-
-// Health check route
+// Basic health check route
 app.get("/api/health", (req, res) => {
-  res.status(200).json({ message: "Server is running!" });
+  res.json({ status: "ok", message: "Server is healthy!" });
 });
 
-// Export app — do NOT call app.listen() here!
-module.exports = app;
+// Routes
+app.use("/api/workouts", workoutRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
+
+export default app;
